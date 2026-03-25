@@ -15,44 +15,43 @@ export default async function AdminProductsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-9 flex flex-col items-center gap-5 text-center">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Produktai</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {products.length} produktų iš viso
-          </p>
+          <div className="mx-auto mb-2 h-1 w-14 rounded-full bg-gradient-to-r from-primary to-accent" aria-hidden />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Produktai</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{products.length} produktų iš viso</p>
         </div>
         <Link
           href="/admin/products/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-sky-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:brightness-110"
         >
           <Plus className="h-4 w-4" />
           Naujas produktas
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
+      <div className="card-elevated overflow-hidden text-left">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border text-left text-sm text-muted-foreground">
-                <th className="px-6 py-3 font-medium">Produktas</th>
-                <th className="px-6 py-3 font-medium">Kategorija</th>
-                <th className="px-6 py-3 font-medium">Kaina</th>
-                <th className="px-6 py-3 font-medium">Sandėlyje</th>
-                <th className="px-6 py-3 font-medium">Išskirtinis</th>
-                <th className="px-6 py-3 font-medium">Veiksmai</th>
+              <tr className="border-b border-border/70 bg-muted/15 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-6 py-3.5 font-medium">Produktas</th>
+                <th className="px-6 py-3.5 font-medium">Kategorija</th>
+                <th className="px-6 py-3.5 font-medium">Kaina</th>
+                <th className="px-6 py-3.5 font-medium">Sandėlyje</th>
+                <th className="px-6 py-3.5 font-medium">Išskirtinis</th>
+                <th className="px-6 py-3.5 font-medium">Veiksmai</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
                 <tr
                   key={product.id}
-                  className="border-b border-border last:border-0"
+                  className="border-b border-border/60 transition-colors last:border-0 hover:bg-muted/25"
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/80 ring-1 ring-border/50">
                         <Package className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div>

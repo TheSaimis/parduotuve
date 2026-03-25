@@ -7,9 +7,9 @@ export default function StoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex min-h-screen w-full flex-col items-stretch">
       <Navbar />
-      <main className="w-full flex-1">{children}</main>
+      <main className="relative w-full min-w-0 flex-1 overflow-x-clip">{children}</main>
       <Footer />
     </div>
   );

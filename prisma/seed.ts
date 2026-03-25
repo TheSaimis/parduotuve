@@ -1,12 +1,8 @@
 import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client.js";
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-// Use same config as app - DATABASE_URL from .env (mysql:// or mariadb://)
-const dbUrl = process.env.DATABASE_URL ?? "mysql://root@localhost:3306/eparduotuve";
-const adapter = new PrismaMariaDb(dbUrl);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   await prisma.orderItem.deleteMany();

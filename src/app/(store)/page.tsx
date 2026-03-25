@@ -1,14 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import HeroBanner from "@/components/home/HeroBanner";
-import CategoryCard from "@/components/home/CategoryCard";
+import CatalogCard from "@/components/home/CatalogCard";
 import ProductCard from "@/components/home/ProductCard";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function HomePage() {
-  const categories = await prisma.category.findMany({
+  const catalogs = await prisma.category.findMany({
+    where: { parentId: null },
     include: {
-      _count: { select: { products: true } },
+      children: {
+        include: {
+          _count: { select: { products: true } },
+        },
+      },
     },
     orderBy: { name: "asc" },
   });
@@ -16,7 +21,7 @@ export default async function HomePage() {
   const featuredProducts = await prisma.product.findMany({
     where: { featured: true },
     include: {
-      category: { select: { name: true } },
+      category: { select: { name: true, parent: { select: { name: true, slug: true } } } },
       images: { take: 1 },
     },
     take: 8,
@@ -27,58 +32,66 @@ export default async function HomePage() {
     <>
       <HeroBanner />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:max-w-[1600px] lg:px-8 xl:max-w-[1920px] 2xl:max-w-[95vw]">
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-xl font-bold text-foreground sm:text-2xl lg:text-3xl">Kategorijos</h2>
-          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-            Raskite tai, ko ieškote
+      <section className="page-container py-10 sm:py-14 lg:py-16">
+        <div className="mb-8 text-center sm:mb-10">
+          <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
+            Katalogai
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
+            Pasirinkite kategoriją ir naršykite prekes
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
-          {categories.map((cat) => (
-            <CategoryCard
-              key={cat.id}
-              name={cat.name}
-              slug={cat.slug}
-              productCount={cat._count.products}
-            />
-          ))}
-        </div>
+        <ul className="grid-fluid-cards w-full list-none">
+          {catalogs.map((catalog) => {
+            const totalProducts = catalog.children.reduce((sum, c) => sum + c._count.products, 0);
+            return (
+              <li key={catalog.id} className="flex min-h-0 min-w-0">
+                <CatalogCard
+                  name={catalog.name}
+                  slug={catalog.slug}
+                  description={catalog.description}
+                  childCount={catalog.children.length}
+                  productCount={totalProducts}
+                  image={catalog.image}
+                />
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:max-w-[1600px] lg:px-8 xl:max-w-[1920px] 2xl:max-w-[95vw]">
-        <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-foreground sm:text-2xl lg:text-3xl">
-              Išskirtiniai produktai
-            </h2>
-            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-              Populiariausi ir rekomenduojami produktai
-            </p>
-          </div>
+      <section className="page-container pb-14 sm:pb-16 lg:pb-20">
+        <div className="mb-8 flex flex-col items-center gap-3 text-center sm:mb-10 sm:gap-4">
+          <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
+            Išskirtiniai produktai
+          </h2>
+          <p className="mx-auto max-w-md text-xs text-muted-foreground sm:text-sm">
+            Populiariausi ir rekomenduojami produktai
+          </p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80 sm:self-center"
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-primary transition-colors hover:text-sky-400 sm:text-lg sm:min-h-14 sm:px-6 sm:py-3.5"
           >
             Visi produktai
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <ul className="grid-fluid-products w-full list-none">
           {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              name={product.name}
-              slug={product.slug}
-              price={Number(product.price)}
-              brand={product.brand}
-              image={product.images[0]?.url ?? null}
-              category={product.category.name}
-            />
+            <li key={product.id} className="flex min-h-0 min-w-0">
+              <ProductCard
+                name={product.name}
+                slug={product.slug}
+                price={Number(product.price)}
+                brand={product.brand}
+                image={product.images[0]?.url ?? null}
+                category={product.category.name}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </>
   );

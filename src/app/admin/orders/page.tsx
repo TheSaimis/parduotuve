@@ -76,19 +76,18 @@ export default function AdminOrdersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <Loader2 className="h-9 w-9 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Užsakymai</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {orders.length} užsakymų iš viso
-        </p>
+      <div className="mb-9 text-center">
+        <div className="mx-auto mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-primary to-accent" aria-hidden />
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Užsakymai</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{orders.length} užsakymų iš viso</p>
       </div>
 
       <div className="space-y-4">
@@ -99,16 +98,17 @@ export default function AdminOrdersPage() {
           return (
             <div
               key={order.id}
-              className="overflow-hidden rounded-2xl border border-border bg-card"
+              className="card-elevated overflow-hidden transition-transform hover:-translate-y-0.5"
             >
               <button
+                type="button"
                 onClick={() =>
                   setExpandedOrder(isExpanded ? null : order.id)
                 }
-                className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-muted/50"
+                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left transition-colors hover:bg-muted/30 sm:px-6"
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 ring-1 ring-primary/20">
                     <ShoppingCart className="h-5 w-5 text-primary" />
                   </div>
                   <div>
@@ -140,7 +140,7 @@ export default function AdminOrdersPage() {
               </button>
 
               {isExpanded && (
-                <div className="border-t border-border px-6 py-4">
+                <div className="border-t border-border/70 bg-muted/10 px-5 py-5 sm:px-6">
                   <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <p className="text-xs font-medium text-muted-foreground">
@@ -169,7 +169,7 @@ export default function AdminOrdersPage() {
                       {order.items.map((item) => (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2"
+                          className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3 py-2.5"
                         >
                           <span className="text-sm text-foreground">
                             {item.product.name}{" "}
@@ -198,10 +198,10 @@ export default function AdminOrdersPage() {
                             key={s}
                             onClick={() => updateStatus(order.id, s)}
                             disabled={isActive}
-                            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
                               isActive
-                                ? sInfo.color + " opacity-100"
-                                : "bg-muted text-muted-foreground hover:text-foreground"
+                                ? sInfo.color + " ring-1 ring-white/10"
+                                : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`}
                           >
                             {sInfo.label}
@@ -217,8 +217,8 @@ export default function AdminOrdersPage() {
         })}
 
         {orders.length === 0 && (
-          <div className="rounded-2xl border border-border bg-card py-12 text-center">
-            <ShoppingCart className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+          <div className="card-elevated py-14 text-center">
+            <ShoppingCart className="mx-auto mb-3 h-11 w-11 text-muted-foreground/70" />
             <p className="text-sm text-muted-foreground">Nėra užsakymų</p>
           </div>
         )}

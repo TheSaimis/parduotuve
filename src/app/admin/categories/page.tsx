@@ -86,27 +86,27 @@ export default function AdminCategoriesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <Loader2 className="h-9 w-9 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-9 flex flex-col items-center gap-5 text-center">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Kategorijos</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {categories.length} kategorijų iš viso
-          </p>
+          <div className="mx-auto mb-2 h-1 w-14 rounded-full bg-gradient-to-r from-primary to-accent" aria-hidden />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Kategorijos</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{categories.length} kategorijų iš viso</p>
         </div>
         <button
+          type="button"
           onClick={() => {
             setEditing(null);
             setShowForm(true);
           }}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-sky-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:brightness-110"
         >
           <Plus className="h-4 w-4" />
           Nauja kategorija
@@ -114,14 +114,15 @@ export default function AdminCategoriesPage() {
       </div>
 
       {showForm && (
-        <div className="mb-6 rounded-2xl border border-border bg-card p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">
+        <div className="card-elevated mb-8 p-6 text-left sm:p-7">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               {editing ? "Redaguoti kategoriją" : "Nauja kategorija"}
             </h2>
             <button
+              type="button"
               onClick={closeForm}
-              className="rounded-lg p-1 text-muted-foreground hover:text-foreground"
+              className="rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
             >
               <X className="h-5 w-5" />
             </button>
@@ -137,7 +138,7 @@ export default function AdminCategoriesPage() {
                   name="name"
                   required
                   defaultValue={editing?.name}
-                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                  className="input-field"
                   placeholder="pvz. Procesoriai"
                 />
               </div>
@@ -148,7 +149,7 @@ export default function AdminCategoriesPage() {
                 <input
                   name="image"
                   defaultValue={editing?.image ?? ""}
-                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                  className="input-field"
                   placeholder="https://..."
                 />
               </div>
@@ -161,15 +162,15 @@ export default function AdminCategoriesPage() {
                 name="description"
                 rows={3}
                 defaultValue={editing?.description ?? ""}
-                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                className="input-field min-h-[5.5rem] resize-y"
                 placeholder="Kategorijos aprašymas..."
               />
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 type="submit"
                 disabled={formLoading}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-sky-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:brightness-110 disabled:opacity-50"
               >
                 {formLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editing ? "Atnaujinti" : "Sukurti"}
@@ -177,7 +178,7 @@ export default function AdminCategoriesPage() {
               <button
                 type="button"
                 onClick={closeForm}
-                className="rounded-xl border border-border px-6 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted"
+                className="rounded-xl border border-border/80 bg-muted/30 px-6 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
               >
                 Atšaukti
               </button>
@@ -190,22 +191,24 @@ export default function AdminCategoriesPage() {
         {categories.map((cat) => (
           <div
             key={cat.id}
-            className="rounded-2xl border border-border bg-card p-6"
+            className="card-elevated p-6 text-left transition-transform hover:-translate-y-0.5"
           >
             <div className="mb-3 flex items-start justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/25 to-primary/5 ring-1 ring-primary/20">
                 <FolderTree className="h-5 w-5 text-primary" />
               </div>
               <div className="flex gap-1">
                 <button
+                  type="button"
                   onClick={() => openEdit(cat)}
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
                 >
                   <Pencil className="h-4 w-4" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleDelete(cat)}
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500"
+                  className="rounded-xl p-2 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-400"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

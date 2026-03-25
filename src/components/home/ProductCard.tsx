@@ -22,9 +22,9 @@ export default function ProductCard({
   return (
     <Link
       href={`/products/${slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 sm:rounded-2xl"
+      className="group flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-sm ring-1 ring-white/[0.04] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-lg hover:shadow-primary/10"
     >
-      <div className="relative flex aspect-square min-h-[140px] items-center justify-center bg-muted/50 sm:aspect-[4/3] sm:min-h-[180px] lg:aspect-[4/3]">
+      <div className="relative flex aspect-square min-h-[140px] items-center justify-center bg-gradient-to-b from-muted/60 to-muted/30 sm:aspect-[4/3] sm:min-h-[180px] lg:aspect-[4/3]">
         {image ? (
           <img
             src={image}
@@ -35,7 +35,7 @@ export default function ProductCard({
           <Package className="h-12 w-12 text-muted-foreground/30 sm:h-16 sm:w-16" />
         )}
         {brand && (
-          <span className="absolute left-2 top-2 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-muted-foreground backdrop-blur-sm sm:left-3 sm:top-3">
+          <span className="absolute left-2 top-2 rounded-lg border border-border/50 bg-background/85 px-2 py-1 text-xs font-medium text-muted-foreground backdrop-blur-md sm:left-3 sm:top-3">
             {brand}
           </span>
         )}

@@ -75,7 +75,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+        <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-400 ring-1 ring-red-500/20">
           {error}
         </div>
       )}
@@ -89,7 +89,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
             name="name"
             required
             defaultValue={initialData?.name}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
             placeholder="pvz. AMD Ryzen 7 7800X3D"
           />
         </div>
@@ -102,7 +102,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
             name="categoryId"
             required
             defaultValue={initialData?.categoryId}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
           >
             <option value="">Pasirinkite kategoriją</option>
             {categories.map((cat) => (
@@ -123,7 +123,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
             step="0.01"
             required
             defaultValue={initialData ? Number(initialData.price) : ""}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
             placeholder="0.00"
           />
         </div>
@@ -136,7 +136,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
             name="stock"
             type="number"
             defaultValue={initialData?.stock ?? 0}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
             placeholder="0"
           />
         </div>
@@ -148,7 +148,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
           <input
             name="brand"
             defaultValue={initialData?.brand ?? ""}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
             placeholder="pvz. AMD, Intel, NVIDIA"
           />
         </div>
@@ -160,7 +160,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
           <input
             name="imageUrl"
             defaultValue={initialData?.imageUrl ?? ""}
-            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+            className="input-field"
             placeholder="https://..."
           />
         </div>
@@ -174,12 +174,12 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
           name="description"
           rows={4}
           defaultValue={initialData?.description ?? ""}
-          className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+          className="input-field min-h-[7rem] resize-y"
           placeholder="Produkto aprašymas..."
         />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
         <input
           type="checkbox"
           name="featured"
@@ -192,11 +192,11 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
         </label>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3 pt-1">
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-sky-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:brightness-110 disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -208,7 +208,7 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border border-border px-6 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="rounded-xl border border-border/80 bg-muted/30 px-6 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
         >
           Atšaukti
         </button>

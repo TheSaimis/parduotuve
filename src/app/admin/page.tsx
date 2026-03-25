@@ -75,38 +75,37 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Parduotuvės apžvalga
-        </p>
+      <div className="mb-9 text-center">
+        <div className="mx-auto mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-primary to-accent" aria-hidden />
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Apžvalga</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Parduotuvės santrauka</p>
       </div>
 
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-10 grid grid-cols-1 gap-4 text-center sm:grid-cols-2 sm:text-left lg:grid-cols-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-2xl border border-border bg-card p-6"
+            className="card-elevated p-6 transition-transform hover:-translate-y-0.5"
           >
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </span>
-              <div className={`rounded-xl p-2.5 ${stat.bg}`}>
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-sm font-medium text-muted-foreground">{stat.label}</span>
+              <div className={`rounded-xl p-2.5 ring-1 ring-white/5 ${stat.bg}`}>
                 <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
             </div>
-            <p className="mt-3 text-2xl font-bold text-foreground">
+            <p className="mt-4 text-2xl font-bold tabular-nums tracking-tight text-foreground">
               {stat.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-border bg-card">
-        <div className="flex items-center gap-2 border-b border-border px-6 py-4">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">
+      <div className="card-elevated overflow-hidden text-left">
+        <div className="flex items-center justify-center gap-2.5 border-b border-border/70 bg-muted/20 px-6 py-4 text-center sm:justify-start sm:text-left">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+            <TrendingUp className="h-5 w-5" />
+          </span>
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
             Naujausi užsakymai
           </h2>
         </div>
@@ -114,13 +113,13 @@ export default async function AdminDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border text-left text-sm text-muted-foreground">
-                <th className="px-6 py-3 font-medium">ID</th>
-                <th className="px-6 py-3 font-medium">Klientas</th>
-                <th className="px-6 py-3 font-medium">Produktai</th>
-                <th className="px-6 py-3 font-medium">Suma</th>
-                <th className="px-6 py-3 font-medium">Statusas</th>
-                <th className="px-6 py-3 font-medium">Data</th>
+              <tr className="border-b border-border/70 bg-muted/15 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-6 py-3.5 font-medium">ID</th>
+                <th className="px-6 py-3.5 font-medium">Klientas</th>
+                <th className="px-6 py-3.5 font-medium">Produktai</th>
+                <th className="px-6 py-3.5 font-medium">Suma</th>
+                <th className="px-6 py-3.5 font-medium">Statusas</th>
+                <th className="px-6 py-3.5 font-medium">Data</th>
               </tr>
             </thead>
             <tbody>
@@ -129,7 +128,7 @@ export default async function AdminDashboard() {
                 return (
                   <tr
                     key={order.id}
-                    className="border-b border-border last:border-0"
+                    className="border-b border-border/60 transition-colors last:border-0 hover:bg-muted/25"
                   >
                     <td className="px-6 py-4 text-sm font-medium text-foreground">
                       #{order.id}

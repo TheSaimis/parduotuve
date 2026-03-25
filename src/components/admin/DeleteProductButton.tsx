@@ -34,7 +34,7 @@ export default function DeleteProductButton({
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 disabled:opacity-50"
+      className="rounded-xl p-2 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50"
     >
       <Trash2 className="h-4 w-4" />
     </button>
