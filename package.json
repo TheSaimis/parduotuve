@@ -11,7 +11,9 @@
     "db:generate": "npx prisma generate",
     "db:seed": "npx tsx prisma/seed.ts",
     "db:import-dummyjson": "npx tsx scripts/import-dummyjson.ts",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

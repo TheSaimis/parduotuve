@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "file:/data/database.db"
+      HOSTNAME: "0.0.0.0"
+      PORT: "3000"
+    volumes:
+      # SQLite duomenys lieka po konteinerio restarto
+      - vitrina_data:/data
+    restart: unless-stopped
+
+volumes:
+  vitrina_data:

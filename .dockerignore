@@ -1,0 +1,27 @@
+# Dependencies & build
+node_modules
+.next
+out
+
+# Git & IDE
+.git
+.gitignore
+.cursor
+*.md
+
+# Env (pass via compose / runtime)
+.env
+.env.*
+!.env.example
+
+# Local DB & tooling
+prisma/dev.db
+prisma/*.db-journal
+*.db
+*.db-journal
+
+# Misc
+coverage
+.DS_Store
+npm-debug.log*
+.vercel

@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vitrina
 
-## Getting Started
+Elektroninės parduotuvės projektas: **Next.js** (App Router), **React**, **Prisma** (SQLite), **Tailwind CSS**. Yra vieša parduotuvė ir **administravimo skydelis** (`/admin`).
 
-First, run the development server:
+## Reikalavimai
+
+- [Node.js](https://nodejs.org/) 20.x ar naujesnė
+- [npm](https://www.npmjs.com/) (kartu su Node)
+
+Neprivaloma: [Docker Desktop](https://www.docker.com/products/docker-desktop/) — jei norite paleisti per „Docker Compose“.
+
+## Greitas startas (lokaliai)
+
+1. Nukopijuokite aplinkos kintamuosius ir nustatykite duomenų bazę:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   `.env` faile naudokite SQLite (pagal `prisma/schema.prisma`), pvz.:
+
+   ```env
+   DATABASE_URL="file:./prisma/dev.db"
+   ```
+
+2. Įdiekite priklausomybes ir paruoškite DB:
+
+   ```bash
+   npm install
+   npx prisma generate
+   npx prisma db push
+   ```
+
+   (Neprivaloma) pradiniai duomenys:
+
+   ```bash
+   npm run db:seed
+   ```
+
+3. Paleiskite kūrimo serverį:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Naršyklėje: [http://localhost:3000](http://localhost:3000)  
+   Administravimas: [http://localhost:3000/admin](http://localhost:3000/admin)
+
+## Docker
+
+Konteineryje naudojama ta pati SQLite schema; duomenys saugomi tomu (`/data/database.db`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Arba:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run docker:up
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tada atidarykite [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+Sustabdyti:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run docker:down
+# arba: docker compose down
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Pastaba:** jei reikia pradinės duomenų užpildos, po pirmo paleidimo galite įvykdyti seed konteineryje (reikės laikinai įdiegti `tsx`), arba seed paleisti lokaliai prieš eksportą, priklausomai nuo jūsų darbo eigos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Naudingos komandos
 
-## Deploy on Vercel
+| Komanda | Aprašymas |
+|--------|-----------|
+| `npm run dev` | Kūrimo režimas (Turbopack) |
+| `npm run build` | Produkcinis build |
+| `npm run start` | Produkcinis serveris (po `build`) |
+| `npm run lint` | ESLint |
+| `npm run db:push` | Prisma schemos sinchronizavimas su DB |
+| `npm run db:generate` | Prisma kliento generavimas |
+| `npm run db:seed` | Užpildymas pradiniais duomenimis |
+| `npm run db:studio` | Prisma Studio (DB peržiūra) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Struktūra (trumpai)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/(store)/` — parduotuvės puslapiai
+- `src/app/admin/` — administravimas
+- `src/app/api/` — API maršrutai
+- `src/components/` — React komponentai
+- `prisma/schema.prisma` — duomenų modelis
+
+## Licencija ir technologijos
+
+Projektas sukurtas naudojant [Next.js](https://nextjs.org). Šriftas: [Geist](https://vercel.com/font) per `next/font`.
+
+Išdėstymas [Vercel](https://vercel.com) ar kitame hostinge — žr. [Next.js diegimo dokumentaciją](https://nextjs.org/docs/app/building-your-application/deploying).
