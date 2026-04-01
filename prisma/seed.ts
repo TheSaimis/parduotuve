@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+/** Neprivaloma: lietuviškas PC demo katalogas. Numatytasis `npm run db:seed` = DummyJSON/FakeStore (tikros prekių nuotraukos). */
 const prisma = new PrismaClient();
 
 async function main() {
@@ -12,12 +13,12 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
-  const adminPassword = await bcrypt.hash("admin123", 10);
+  const adminPassword = await bcrypt.hash("admin", 10);
   const userPassword = await bcrypt.hash("user123", 10);
 
   const admin = await prisma.user.create({
     data: {
-      email: "admin@eparduotuve.lt",
+      email: "admin@gmail.com",
       password: adminPassword,
       name: "Administratorius",
       role: "ADMIN",

@@ -11,6 +11,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
 
 const links = [
   { href: "/admin", label: "Apžvalga", icon: LayoutDashboard },
@@ -19,7 +20,12 @@ const links = [
   { href: "/admin/orders", label: "Užsakymai", icon: ShoppingCart },
 ];
 
-export default function AdminSidebar() {
+type Props = {
+  adminName: string;
+  adminEmail: string;
+};
+
+export default function AdminSidebar({ adminName, adminEmail }: Props) {
   const pathname = usePathname();
 
   return (
@@ -35,6 +41,9 @@ export default function AdminSidebar() {
           <h1 className="truncate text-base font-bold tracking-tight text-foreground">
             Administravimas
           </h1>
+          <p className="truncate text-xs text-muted-foreground" title={adminEmail}>
+            {adminName}
+          </p>
         </div>
       </div>
 
@@ -74,7 +83,8 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="border-t border-border/60 p-3">
+      <div className="space-y-2 border-t border-border/60 p-3">
+        <AdminLogoutButton />
         <Link
           href="/"
           className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-muted/30 px-3.5 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:border-primary/35 hover:bg-muted/60 hover:text-foreground"

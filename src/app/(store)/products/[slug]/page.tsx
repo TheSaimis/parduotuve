@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ChevronRight, ShoppingCart } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -163,14 +164,7 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-3 lg:justify-start">
-            <button
-              type="button"
-              disabled={product.stock === 0}
-              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Į krepšelį
-            </button>
+            <AddToCartButton productId={product.id} stock={product.stock} />
             <Link
               href="/products"
               className="flex min-h-[48px] items-center justify-center rounded-xl border border-border/80 bg-muted/30 px-6 py-3 text-center text-sm font-semibold text-foreground transition-colors hover:bg-muted/60"

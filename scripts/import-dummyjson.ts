@@ -186,8 +186,17 @@ const FAKESTORE_CAT_MAP: Record<string, string> = {
 };
 
 async function fetchFakeStore(): Promise<UnifiedProduct[]> {
-  const res = await fetch(`${FAKESTORE_API}/products`);
-  if (!res.ok) throw new Error(`FakeStore failed: ${res.status}`);
+  let res: Response;
+  try {
+    res = await fetch(`${FAKESTORE_API}/products`);
+  } catch (e) {
+    console.warn(`  ⚠ FakeStoreAPI: ryšio klaida — praleidžiama (${e instanceof Error ? e.message : e})`);
+    return [];
+  }
+  if (!res.ok) {
+    console.warn(`  ⚠ FakeStoreAPI: HTTP ${res.status} — praleidžiama, lieka tik DummyJSON`);
+    return [];
+  }
   const data = await res.json();
   const products: UnifiedProduct[] = [];
 
@@ -225,9 +234,9 @@ async function main() {
   await prisma.user.deleteMany();
 
   console.log("Kuriami vartotojai...");
-  const adminPw = await bcrypt.hash("admin123", 10);
+  const adminPw = await bcrypt.hash("admin", 10);
   const userPw = await bcrypt.hash("user123", 10);
-  await prisma.user.create({ data: { email: "admin@eparduotuve.lt", password: adminPw, name: "Administratorius", role: "ADMIN" } });
+  await prisma.user.create({ data: { email: "admin@gmail.com", password: adminPw, name: "Administratorius", role: "ADMIN" } });
   await prisma.user.create({ data: { email: "jonas@gmail.com", password: userPw, name: "Jonas Jonaitis", role: "USER" } });
 
   // Fetch products from APIs

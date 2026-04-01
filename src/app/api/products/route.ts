@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { unauthorizedIfNotAdmin } from "@/lib/require-admin-api";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -42,6 +43,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await unauthorizedIfNotAdmin();
+  if (denied) return denied;
+
   const body = await request.json();
 
   const slug = body.name

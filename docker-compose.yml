@@ -10,6 +10,8 @@ services:
       DATABASE_URL: "file:/data/database.db"
       HOSTNAME: "0.0.0.0"
       PORT: "3000"
+      # Nustatykite .env arba aplinkoje; kitaip admin prisijungimas neveiks
+      SESSION_SECRET: "${SESSION_SECRET:-pakeiskite-docker-produkcijoje}"
     volumes:
       # SQLite duomenys lieka po konteinerio restarto
       - vitrina_data:/data

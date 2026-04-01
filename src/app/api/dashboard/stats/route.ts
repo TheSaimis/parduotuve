@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { unauthorizedIfNotAdmin } from "@/lib/require-admin-api";
 
 export async function GET() {
+  const denied = await unauthorizedIfNotAdmin();
+  if (denied) return denied;
+
   const [productCount, categoryCount, orderCount, userCount, revenueResult] =
     await Promise.all([
       prisma.product.count(),
