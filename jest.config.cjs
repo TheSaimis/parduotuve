@@ -6,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
+  clearMocks: true,
   collectCoverageFrom: [
     "src/lib/**/*.{ts,tsx}",
     "!src/lib/**/context.ts",
