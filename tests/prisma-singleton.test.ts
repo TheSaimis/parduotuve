@@ -5,7 +5,8 @@ describe("prisma singleton", () => {
     const mod = await import("@/lib/prisma");
     expect(mod.prisma).toBeDefined();
     // basic shape check
-    expect(typeof (mod.prisma as any).$transaction).toBe("function");
+    const prismaLike = mod.prisma as { $transaction?: unknown };
+    expect(typeof prismaLike.$transaction).toBe("function");
   });
 });
 

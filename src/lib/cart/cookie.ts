@@ -1,14 +1,17 @@
 import { cookies } from "next/headers";
 import { getSessionSecret } from "@/lib/admin-session";
 import {
-  addToCartLines,
-  clearCartLines,
   decodeCartPayload,
   encodeCartPayload,
-  removeCartLine,
-  setCartLineQty,
   type CartLine,
 } from "@/lib/cart/core";
+export {
+  addToCartLines,
+  clearCartLines,
+  removeCartLine,
+  setCartLineQty,
+} from "@/lib/cart/core";
+export type { CartLine } from "@/lib/cart/core";
 
 export const CART_COOKIE = "vitrina_cart";
 

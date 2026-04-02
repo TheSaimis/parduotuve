@@ -5,6 +5,12 @@ import {
   encodeAdminSession,
   getSessionSecret,
 } from "@/lib/admin-session-core";
+export {
+  decodeAdminSession,
+  encodeAdminSession,
+  getSessionSecret,
+} from "@/lib/admin-session-core";
+export type { AdminSessionPayload } from "@/lib/admin-session-core";
 
 export const ADMIN_SESSION_COOKIE = "vitrina_admin";
 
