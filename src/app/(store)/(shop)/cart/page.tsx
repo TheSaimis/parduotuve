@@ -17,6 +17,7 @@ export default function CartPage() {
         { label: "Krepšelis" },
       ]}
       maxWidth="3xl"
+      centered
     >
       <CartView />
     </ShopFlowShell>
