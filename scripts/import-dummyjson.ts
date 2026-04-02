@@ -8,6 +8,10 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { createSlugify } from "@/lib/slug/factory";
+import { createDummyJsonAdapter } from "./sources/dummyjson";
+import { createFakeStoreAdapter } from "./sources/fakestore";
+import type { UnifiedProduct } from "./sources/types";
 
 const prisma = new PrismaClient();
 
@@ -110,115 +114,9 @@ const SUBCATEGORY_LT: Record<string, { name: string; description: string }> = {
   "womens-clothing": { name: "Moteriški drabužiai", description: "Moteriški drabužiai ir aksesuarai." },
 };
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-interface UnifiedProduct {
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  brand?: string;
-  stock: number;
-  images: string[];
-  specs: Record<string, unknown>;
-  source: string;
-}
-
-// ── DummyJSON ──
-
-async function fetchDummyJSON(): Promise<UnifiedProduct[]> {
-  const res = await fetch(`${DUMMYJSON_API}/products?limit=0`);
-  if (!res.ok) throw new Error(`DummyJSON failed: ${res.status}`);
-  const data = await res.json();
-  const products: UnifiedProduct[] = [];
-
-  for (const p of data.products ?? []) {
-    const imgs: string[] = [];
-    if (Array.isArray(p.images)) {
-      for (const img of p.images) {
-        if (typeof img === "string" && img.startsWith("http")) imgs.push(img);
-      }
-    }
-    if (p.thumbnail && typeof p.thumbnail === "string" && p.thumbnail.startsWith("http")) {
-      if (!imgs.includes(p.thumbnail)) imgs.push(p.thumbnail);
-    }
-    if (imgs.length === 0) continue;
-
-    const specs: Record<string, unknown> = {};
-    if (p.sku) specs.sku = p.sku;
-    if (p.weight != null) specs.svoris_kg = p.weight;
-    if (p.dimensions) specs.matmenys_cm = `${p.dimensions.width} × ${p.dimensions.height} × ${p.dimensions.depth}`;
-    if (p.warrantyInformation) specs.garantija = p.warrantyInformation;
-    if (p.shippingInformation) specs.pristatymas = p.shippingInformation;
-    if (p.tags?.length) specs.zymos = p.tags.join(", ");
-    if (p.brand) specs.gamintojas = p.brand;
-
-    products.push({
-      title: p.title,
-      description: p.description || "",
-      price: p.price,
-      category: p.category,
-      brand: p.brand || undefined,
-      stock: p.stock ?? Math.floor(Math.random() * 50) + 5,
-      images: imgs,
-      specs,
-      source: "dummyjson",
-    });
-  }
-
-  return products;
-}
-
-// ── FakeStoreAPI ──
-
-const FAKESTORE_CAT_MAP: Record<string, string> = {
-  electronics: "electronics",
-  jewelery: "jewelery",
-  "men's clothing": "mens-clothing",
-  "women's clothing": "womens-clothing",
-};
-
-async function fetchFakeStore(): Promise<UnifiedProduct[]> {
-  let res: Response;
-  try {
-    res = await fetch(`${FAKESTORE_API}/products`);
-  } catch (e) {
-    console.warn(`  ⚠ FakeStoreAPI: ryšio klaida — praleidžiama (${e instanceof Error ? e.message : e})`);
-    return [];
-  }
-  if (!res.ok) {
-    console.warn(`  ⚠ FakeStoreAPI: HTTP ${res.status} — praleidžiama, lieka tik DummyJSON`);
-    return [];
-  }
-  const data = await res.json();
-  const products: UnifiedProduct[] = [];
-
-  for (const p of data) {
-    if (!p.image || typeof p.image !== "string" || !p.image.startsWith("http")) continue;
-    const catKey = FAKESTORE_CAT_MAP[p.category] ?? slugify(p.category);
-
-    products.push({
-      title: p.title,
-      description: p.description || "",
-      price: p.price,
-      category: catKey,
-      brand: undefined,
-      stock: Math.floor(Math.random() * 80) + 10,
-      images: [p.image],
-      specs: p.rating ? { reitingas: `${p.rating.rate}/5 (${p.rating.count} atsiliepimai)` } : {},
-      source: "fakestore",
-    });
-  }
-
-  return products;
-}
+const slugify = createSlugify("unicode");
+const dummyJson = createDummyJsonAdapter(DUMMYJSON_API);
+const fakeStore = createFakeStoreAdapter({ baseUrl: FAKESTORE_API, slugify });
 
 // ── Main ──
 
@@ -241,11 +139,11 @@ async function main() {
 
   // Fetch products from APIs
   console.log("Gaunami produktai iš DummyJSON...");
-  const dummyProducts = await fetchDummyJSON();
+  const dummyProducts = await dummyJson.fetchProducts();
   console.log(`  → ${dummyProducts.length} produktai`);
 
   console.log("Gaunami produktai iš FakeStoreAPI...");
-  const fakeProducts = await fetchFakeStore();
+  const fakeProducts = await fakeStore.fetchProducts();
   console.log(`  → ${fakeProducts.length} produktai`);
 
   const allProducts = [...dummyProducts, ...fakeProducts];

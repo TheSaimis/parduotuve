@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { unauthorizedIfNotAdmin } from "@/lib/require-admin-api";
+import { createSlugify } from "@/lib/slug/factory";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -48,17 +49,8 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
-  const slug = body.name
-    .toLowerCase()
-    .replace(/[ąčęėįšųūž]/g, (c: string) => {
-      const map: Record<string, string> = {
-        ą: "a", č: "c", ę: "e", ė: "e", į: "i",
-        š: "s", ų: "u", ū: "u", ž: "z",
-      };
-      return map[c] ?? c;
-    })
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  const slugify = createSlugify("lt");
+  const slug = slugify(body.name);
 
   const product = await prisma.product.create({
     data: {
