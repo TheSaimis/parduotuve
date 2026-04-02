@@ -6,7 +6,13 @@ import { Loader2, CheckCircle } from "lucide-react";
 import { emitCartChanged, submitCheckout } from "@/lib/cart/client";
 import { SHOP_ROUTES } from "@/lib/cart/constants";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({
+  successContinueHref = "/products",
+  cartHref = SHOP_ROUTES.cart,
+}: {
+  successContinueHref?: string;
+  cartHref?: string;
+}) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -63,7 +69,7 @@ export default function CheckoutForm() {
         </p>
         <button
           type="button"
-          onClick={() => router.push("/products")}
+          onClick={() => router.push(successContinueHref)}
           className="mt-6 inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
         >
           Tęsti apsipirkimą
@@ -71,7 +77,7 @@ export default function CheckoutForm() {
         <p className="mt-4">
           <button
             type="button"
-            onClick={() => router.push(SHOP_ROUTES.cart)}
+            onClick={() => router.push(cartHref)}
             className="text-sm font-medium text-primary hover:underline"
           >
             Atgal į krepšelį

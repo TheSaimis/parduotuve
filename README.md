@@ -145,6 +145,29 @@ sequenceDiagram
 5. **Adapter (struktūrinis)** – `scripts/sources/*.ts`  
    Išoriniai produktų šaltiniai (DummyJSON ir FakeStoreAPI) apgaubti adapteriais į vienodą sąsają (`ProductSourceAdapter`), kad importo logika dirbtų su vienodu `UnifiedProduct` formatu.
 
+## Grafinės naudotojo sąsajos (2.3)
+
+Projekte realizuotos kelios sudėtinės grafinės naudotojo sąsajos, kurios atvaizduoja duomenis ir leidžia jais manipuliuoti:
+
+- **Web parduotuvė**: pagrindinė e. parduotuvės sąsaja (`/`, `/products`, `/categories`, `/cart`, `/checkout`).
+- **Administravimo skydelis**: atskira administratoriaus sąsaja (`/admin`) su CRUD ir užsakymų valdymu.
+- **Mobile (demo) sąsaja**: atskiras, mobiliesiems optimizuotas UI (`/m`), turintis savo navigaciją ir puslapius (`/m/products`, `/m/cart`, `/m/checkout`), naudojantis tą pačią DB ir API.
+
+## Testavimas (3.1)
+
+Projektas turi automatinius testus (Jest + TypeScript) su coverage ir keliomis testavimo kategorijomis:
+
+- **Parametrizuoti testai**: `tests/slug.test.ts` (`test.each(...)`).
+- **Išimčių / klaidų scenarijų testavimas**: `tests/cart-cookie.test.ts` (blogas token formatas / sugadintas parašas), `tests/admin-session.test.ts` (pasibaigusi sesija).
+- **Performance testas**: `tests/performance.test.ts` (slugify našumo patikra).
+
+Paleidimas:
+
+```bash
+npm run test
+npm run test:coverage
+```
+
 ### Admin prisijungimas
 
 Trumpa seka:
