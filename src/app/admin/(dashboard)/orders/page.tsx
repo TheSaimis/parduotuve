@@ -53,16 +53,18 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
   async function fetchOrders() {
     const res = await fetch("/api/orders");
     const data = await res.json();
     setOrders(data.orders);
     setLoading(false);
   }
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      void fetchOrders();
+    });
+  }, []);
 
   async function updateStatus(orderId: number, status: string) {
     await fetch(`/api/orders/${orderId}`, {

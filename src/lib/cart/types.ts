@@ -19,4 +19,9 @@ export type CheckoutPayload = {
   name: string;
   email: string;
   address: string;
+  phone?: string;
+  city?: string;
+  postalCode?: string;
+  paymentMethod?: "bank_transfer" | "card" | "cash";
+  notes?: string;
 };

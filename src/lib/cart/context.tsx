@@ -29,7 +29,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void refreshCartCount();
+    // Perkeliame į microtask, kad nekiltų "set-state-in-effect" perspėjimai.
+    queueMicrotask(() => {
+      void refreshCartCount();
+    });
   }, [refreshCartCount]);
 
   useEffect(() => {

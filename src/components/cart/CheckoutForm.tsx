@@ -11,6 +11,13 @@ export default function CheckoutForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"bank_transfer" | "card" | "cash">(
+    "bank_transfer",
+  );
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [doneId, setDoneId] = useState<number | null>(null);
@@ -20,7 +27,16 @@ export default function CheckoutForm() {
     setError(null);
     setLoading(true);
     try {
-      const result = await submitCheckout({ name, email, address });
+      const result = await submitCheckout({
+        name,
+        email,
+        address,
+        phone: phone.trim() || undefined,
+        city: city.trim() || undefined,
+        postalCode: postalCode.trim() || undefined,
+        paymentMethod,
+        notes: notes.trim() || undefined,
+      });
       if (!result.ok) {
         setError(result.error ?? "Nepavyko pateikti užsakymo.");
         return;
@@ -103,6 +119,21 @@ export default function CheckoutForm() {
         />
       </div>
       <div className="space-y-2">
+        <label htmlFor="co-phone" className="text-sm font-medium">
+          Telefonas
+        </label>
+        <input
+          id="co-phone"
+          name="phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="input-field w-full"
+          autoComplete="tel"
+          placeholder="+370..."
+        />
+      </div>
+      <div className="space-y-2">
         <label htmlFor="co-address" className="text-sm font-medium">
           Pristatymo adresas
         </label>
@@ -115,6 +146,86 @@ export default function CheckoutForm() {
           autoComplete="street-address"
           required
           minLength={8}
+        />
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label htmlFor="co-city" className="text-sm font-medium">
+            Miestas
+          </label>
+          <input
+            id="co-city"
+            name="city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="input-field w-full"
+            autoComplete="address-level2"
+            placeholder="Vilnius"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="co-postal" className="text-sm font-medium">
+            Pašto kodas
+          </label>
+          <input
+            id="co-postal"
+            name="postalCode"
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+            className="input-field w-full"
+            autoComplete="postal-code"
+            placeholder="LT-00000"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="co-pay" className="text-sm font-medium">
+          Apmokėjimo būdas
+        </label>
+        <select
+          id="co-pay"
+          name="paymentMethod"
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value as typeof paymentMethod)}
+          className="input-field w-full"
+        >
+          <option value="bank_transfer">Bankinis pavedimas</option>
+          <option value="card">Kortele (demo)</option>
+          <option value="cash">Grynais pristatymo metu (demo)</option>
+        </select>
+        {paymentMethod === "bank_transfer" ? (
+          <div className="rounded-xl border border-border/70 bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+            <div className="font-medium text-foreground">Mokėjimo duomenys</div>
+            <div className="mt-1 grid gap-1">
+              <div>
+                <span className="font-medium text-foreground">Gavėjas:</span>{" "}
+                Vitrina (demo)
+              </div>
+              <div>
+                <span className="font-medium text-foreground">IBAN:</span>{" "}
+                LT12 1234 1234 1234 1234
+              </div>
+              <div>
+                <span className="font-medium text-foreground">Paskirtis:</span>{" "}
+                Užsakymas bus suformuotas, o apmokėjimą suderinsime el. paštu.
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="co-notes" className="text-sm font-medium">
+          Pastabos (nebūtina)
+        </label>
+        <textarea
+          id="co-notes"
+          name="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="input-field min-h-[4.5rem] w-full resize-y"
+          placeholder="Pvz., kodas laiptinėje, patogus pristatymo laikas..."
         />
       </div>
       <button

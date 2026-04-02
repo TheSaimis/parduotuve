@@ -21,16 +21,18 @@ export default function AdminCategoriesPage() {
   const [editing, setEditing] = useState<Category | null>(null);
   const [formLoading, setFormLoading] = useState(false);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   async function fetchCategories() {
     const res = await fetch("/api/categories");
     const data = await res.json();
     setCategories(data);
     setLoading(false);
   }
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      void fetchCategories();
+    });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -14,7 +14,16 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { name?: unknown; email?: unknown; address?: unknown };
+  let body: {
+    name?: unknown;
+    email?: unknown;
+    address?: unknown;
+    phone?: unknown;
+    city?: unknown;
+    postalCode?: unknown;
+    paymentMethod?: unknown;
+    notes?: unknown;
+  };
   try {
     body = await req.json();
   } catch {
@@ -25,6 +34,17 @@ export async function POST(req: Request) {
   const email =
     typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   const address = typeof body.address === "string" ? body.address.trim() : "";
+  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+  const city = typeof body.city === "string" ? body.city.trim() : "";
+  const postalCode =
+    typeof body.postalCode === "string" ? body.postalCode.trim() : "";
+  const paymentMethod =
+    body.paymentMethod === "bank_transfer" ||
+    body.paymentMethod === "card" ||
+    body.paymentMethod === "cash"
+      ? body.paymentMethod
+      : "bank_transfer";
+  const notes = typeof body.notes === "string" ? body.notes.trim() : "";
 
   if (name.length < 2) {
     return NextResponse.json({ error: "Įveskite vardą." }, { status: 400 });
@@ -34,6 +54,14 @@ export async function POST(req: Request) {
   }
   if (address.length < 8) {
     return NextResponse.json({ error: "Įveskite pristatymo adresą." }, { status: 400 });
+  }
+
+  // Papildomi laukai (nebūtini), bet validuojami jei pateikti
+  if (phone && phone.length < 6) {
+    return NextResponse.json({ error: "Įveskite tinkamą telefono numerį." }, { status: 400 });
+  }
+  if (postalCode && postalCode.length < 4) {
+    return NextResponse.json({ error: "Įveskite tinkamą pašto kodą." }, { status: 400 });
   }
 
   const cartLines = await getCartLines();
@@ -90,11 +118,19 @@ export async function POST(req: Request) {
         });
       }
 
+      const addressParts = [
+        address,
+        [postalCode, city].filter(Boolean).join(" ").trim(),
+        phone ? `Tel.: ${phone}` : "",
+        paymentMethod ? `Mokėjimas: ${paymentMethod}` : "",
+        notes ? `Pastabos: ${notes}` : "",
+      ].filter(Boolean);
+
       const order = await tx.order.create({
         data: {
           userId: user.id,
           total: new Prisma.Decimal(total.toFixed(2)),
-          address,
+          address: addressParts.join("\n"),
           status: "PENDING",
           items: {
             create: prepared.map((p) => ({
